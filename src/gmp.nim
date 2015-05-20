@@ -107,15 +107,15 @@ proc finalizerInt(z: GmpInt) =
 proc finalizerRat(q: GmpRat) =
   mpq_clear(q.value)
 
-proc newGmpInt*(): GmpInt =
+proc initGmpInt*(): GmpInt =
   new(result, finalizerInt)
   mpz_init(result.value)
 
-proc newGmpInt*(i: int): GmpInt =
+proc initGmpInt*(i: int): GmpInt =
   new(result, finalizerInt)
   mpz_init_set_si(result.value, i)
 
-proc newGmpInt*(u: uint): GmpInt =
+proc initGmpInt*(u: uint): GmpInt =
   new(result, finalizerInt)
   mpz_init_set_ui(result.value, u)
 
@@ -139,90 +139,90 @@ proc parseGmpInt*(s: string): GmpInt =
   mpz_init_set_str(result.value, s, 10)
 
 proc `+`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_add(result.value, z1.value, z2.value)
 
 proc `+`*(z: GmpInt, i: int): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   if i >= 0:
     mpz_add_ui(result.value, z.value, i.uint)
   else:
     mpz_sub_ui(result.value, z.value, (0 -% i).uint)
 
 proc `-`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_sub(result.value, z1.value, z2.value)
 
 proc `-`*(z: GmpInt, i: int): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   if i >= 0:
     mpz_sub_ui(result.value, z.value, i.uint)
   else:
     mpz_add_ui(result.value, z.value, (0 -% i).uint)
 
 proc `-`*(z: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_neg(result.value, z.value)
 
 proc abs*(z: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_abs(result.value, z.value)
 
 proc sgn*(z: GmpInt): int =
   result = mpz_sgn(z.value)
 
 proc `*`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_mul(result.value, z1.value, z2.value)
 
 proc `*`*(z: GmpInt, i:int): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_mul_si(result.value, z.value, i)
 
 proc `div`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_fdiv_q(result.value, z1.value, z2.value)
 
 proc `mod`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_fdiv_r(result.value, z1.value, z2.value)
 
 proc divmod*(z1, z2: GmpInt): (GmpInt, GmpInt) =
-  var q = newGmpInt()
-  var r = newGmpInt()
+  var q = initGmpInt()
+  var r = initGmpInt()
   mpz_fdiv_qr(q.value, r.value, z1.value, z2.value)
   (q, r)
 
 proc powmod*(base, exp, modulus: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_powm(result.value, base.value, exp.value, modulus.value)
 
 proc powmod*(base, exp: GmpInt, modulus: int): GmpInt =
   assert modulus >= 0
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_powm_ui(result.value, base.value, exp.value, modulus.uint)
 
 proc powmod*(base, exp: GmpInt, modulus: uint): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_powm_ui(result.value, base.value, exp.value, modulus)
 
 proc fact*(i: int): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_fac_ui(result.value, i.uint)
 
 proc binom*(a, b: int): GmpInt =
   assert a >= 0 and b >= 0
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_bin_uiui(result.value, a.uint, b.uint)
 
 proc `^`*(z: GmpInt, i: int): GmpInt =
   assert i >= 0
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_pow_ui(result.value, z.value, i.uint)
 
 proc `^`*(a, b: int): GmpInt =
   assert b >= 0
-  result = newGmpInt()
+  result = initGmpInt()
   if a >= 0:
     mpz_ui_pow_ui(result.value, a.uint, b.uint)
   else:
@@ -231,11 +231,11 @@ proc `^`*(a, b: int): GmpInt =
       result = -result
 
 proc gcd*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_gcd(result.value, z1.value, z2.value)
 
 proc lcm*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_lcm(result.value, z1.value, z2.value)
 
 proc cmp*(z1, z2: GmpInt): int =
@@ -269,19 +269,19 @@ proc `<=`*(i: int, z: GmpInt): bool =
   mpz_cmp_si(z.value, i) >= 0
 
 proc `and`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_and(result.value, z1.value, z2.value)
 
 proc `or`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_ior(result.value, z1.value, z2.value)
 
 proc `xor`*(z1, z2: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_xor(result.value, z1.value, z2.value)
 
 proc `not`*(z: GmpInt): GmpInt =
-  result = newGmpInt()
+  result = initGmpInt()
   mpz_com(result.value, z.value)
 
 proc setBit*(z: GmpInt, i: int) =
