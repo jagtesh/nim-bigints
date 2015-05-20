@@ -1,9 +1,9 @@
 [Package]
-name: "bigints"
-version: "0.2"
-author: "Dennis Felsing"
+name: "gmpints"
+version: "0.1.1"
+author: "Reimer Behrends, Jagtesh Chadha"
 description: "Arbitrary-precision integers"
-license: "MIT"
+license: "CC0"
 
 srcDir: "src"
 

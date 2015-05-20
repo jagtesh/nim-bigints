@@ -2,6 +2,8 @@
 #
 # Written in 2014 by Reimer Behrends <behrends@gmail.com>
 # Modified in 2015 by Jagtesh Chadha <jagtesh@gmail.com>
+# API and tests adapted from the fantastic def-/nim-bigints native Nim library
+# by Reimer Behrends
 #
 # To the extent possible under law, the author(s) have dedicated all
 # copyright and related and neighboring rights to this software to the
@@ -119,22 +121,11 @@ proc initGmpInt*(u: uint): GmpInt =
   new(result, finalizerInt)
   mpz_init_set_ui(result.value, u)
 
-proc toGmpInt*(i: int): GmpInt =
-  new(result, finalizerInt)
-  mpz_init_set_si(result.value, i)
-
-proc toGmpInt*(u: uint): GmpInt =
-  new(result, finalizerInt)
-  mpz_init_set_ui(result.value, u)
-
-template Z*(x: int|uint): GmpInt =
-  toGmpInt(x)
-
 proc newRat*(): GmpRat =
   new(result, finalizerRat)
   mpq_init(result.value)
 
-proc parseGmpInt*(s: string): GmpInt =
+proc initGmpInt*(s: string): GmpInt =
   new(result, finalizerInt)
   mpz_init_set_str(result.value, s, 10)
 
